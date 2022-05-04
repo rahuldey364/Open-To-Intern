@@ -53,10 +53,42 @@ const createIntern = async function (req, res) {
         .send({ status: false, message: "enter details for create an intern" });
     }
   } catch (err) {
-    res.status(500).send({ status: false, data: err.message });
+    res.status(500).send({ status: false, message: err.message });
   }
 };
 
 //============GET /functionup/collegeDetails===========
 
+const getCollegeDetails = async function(req,res){
+  try{
+    const collegeName = req.query.collegeName
+    if(!collegeName){
+      return res.status(400).send({
+        status: false,
+        message: "enter a college name first"
+      });
+    }
+    const isValidCollege = await collegeModel.findOne({name:collegeName})
+    if(!isValidCollege){
+      return res.status(400).send({
+        status: false,
+        message: "you have entered a invalid college name ",
+      });
+    }
+    const getIntern = await internModel.find({collegeId:isValidCollege._id,isDeleted:false}).select({name:1,mobile:1,email:1})
+    const getAllIntern = {
+      name: isValidCollege.name,
+      fullName: isValidCollege.fullName,
+      logolink: isValidCollege.logolink,
+      interests:getIntern
+    }
+    res.status(200).send({status:true,data:getAllIntern})
+
+  }catch (err) {
+    res.status(500).send({ status: false, message: err.message });
+  }
+}
+
 module.exports.createIntern = createIntern;
+module.exports.getCollegeDetails= getCollegeDetails
+
