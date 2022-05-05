@@ -88,7 +88,7 @@ const createIntern = async function (req, res) {
 
 const getCollegeDetails = async function (req, res) {
   try {
-    const collegeName = req.query.collegeName;
+    const collegeName = req.query.collegeName.toUpperCase();
     if (!collegeName) {
       return res.status(400).send({
         status: false,
