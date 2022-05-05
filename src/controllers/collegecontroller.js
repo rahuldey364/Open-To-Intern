@@ -13,6 +13,9 @@ const createCollege = async function (req, res) {
             data: "College name is required for create a college doc",
           });
       }
+      if(!/^([a-zA-Z]+)$/.test(data.name)){
+        return res.status(400).send({status:false, massege:"plz enter valid name" })
+      }
       let isValidName = await collegeModel.findOne({name:data.name})
       if(isValidName){
         return res.status(400).send({status:false,message:"Already one college registered with this same name"})

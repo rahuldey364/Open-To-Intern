@@ -52,26 +52,30 @@ const createIntern = async function (req, res) {
           .status(400)
           .send({ status: false, msg: "mobile number already registered" });
       }
-      if (!data.collegeId) {
+      if (!data.collegeName) {
         return res
           .status(400)
-          .send({ status: false, message: "collegeId is required" });
+          .send({ status: false, message: "collegeName is required" });
       }
-      if (
-        Object.keys(data.collegeId).length == 0 ||
-        data.collegeId.length == 0
-      ) {
-        return res
-          .status(400)
-          .send({ status: false, data: "Enter a valid college id" });
-      }
-      let validationcollegeId = await collegeModel.findById(data.collegeId);
-      if (!validationcollegeId) {
+      // if (
+      //   Object.keys(data.collegeId).length == 0 ||
+      //   data.collegeId.length == 0
+      // ) {
+      //   return res
+      //     .status(400)
+      //     .send({ status: false, data: "Enter a valid college id" });
+      // }
+      let iscollegeName = await collegeModel.findOne({name:data.collegeName});
+      if (!iscollegeName) {
         return res.status(400).send({
           status: false,
           message: "your college is not registered with us ",
         });
       }
+      data.collegeId=iscollegeName._id
+      console.log(data)
+      delete data.collegeName;
+      console.log(data)
       let interncreated = await internModel.create(data);
       res.status(201).send({ status: true, data: interncreated });
     } else {

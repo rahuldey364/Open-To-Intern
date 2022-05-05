@@ -8,6 +8,11 @@ const collegeSchema = new mongoose.Schema(
       uppercase:true,
       required: [true, "college name is required"],
       trim: true,
+      // validate:{
+      //   validator:function(v){
+      //     return /^([a-zA-Z])$/.test(v);
+      //   }
+      // }
     },
     fullName: {
       type: String,
