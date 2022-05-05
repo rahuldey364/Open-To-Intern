@@ -16,7 +16,7 @@ const createIntern = async function (req, res) {
           .status(400)
           .send({ status: false, message: "candidate email id is required" });
       }
-      let isRegisteredEmail = await internModel.find({ email: data.email }); // empty object always return undefined
+      let isRegisteredEmail = await internModel.find({ email: data.email }); 
       if (isRegisteredEmail.length != 0) {
         return res
           .status(400)
@@ -25,7 +25,7 @@ const createIntern = async function (req, res) {
       if (!data.mobile) {
         return res
           .status(400)
-          .send({ status: false, message: "candidate name is required" });
+          .send({ status: false, message: "candidate mobile no is required" });
       }
       let isRegisteredMobile = await internModel.find({ mobile: data.mobile });
       if (isRegisteredMobile.length != 0) {
@@ -59,36 +59,36 @@ const createIntern = async function (req, res) {
 
 //============GET /functionup/collegeDetails===========
 
-const getCollegeDetails = async function(req,res){
-  try{
-    const collegeName = req.query.collegeName
-    if(!collegeName){
+const getCollegeDetails = async function (req, res) {
+  try {
+    const collegeName = req.query.collegeName;
+    if (!collegeName) {
       return res.status(400).send({
         status: false,
-        message: "enter a college name first"
+        message: "enter a college name first",
       });
     }
-    const isValidCollege = await collegeModel.findOne({name:collegeName})
-    if(!isValidCollege){
+    const isValidCollege = await collegeModel.findOne({ name: collegeName }); //{ _Id}
+    if (!isValidCollege) {
       return res.status(400).send({
         status: false,
         message: "you have entered a invalid college name ",
       });
     }
-    const getIntern = await internModel.find({collegeId:isValidCollege._id,isDeleted:false}).select({name:1,mobile:1,email:1})
+    const getIntern = await internModel
+      .find({ collegeId: isValidCollege._id, isDeleted: false })
+      .select({ name: 1, mobile: 1, email: 1,_id:0 });
     const getAllIntern = {
       name: isValidCollege.name,
       fullName: isValidCollege.fullName,
       logolink: isValidCollege.logolink,
-      interests:getIntern
-    }
-    res.status(200).send({status:true,data:getAllIntern})
-
-  }catch (err) {
+      interests: getIntern,
+    };
+    res.status(200).send({ status: true, data: getAllIntern });
+  } catch (err) {
     res.status(500).send({ status: false, message: err.message });
   }
-}
+};
 
 module.exports.createIntern = createIntern;
-module.exports.getCollegeDetails= getCollegeDetails
-
+module.exports.getCollegeDetails = getCollegeDetails;
