@@ -5,84 +5,88 @@ const collegeModel = require("../models/collegeModel");
 const createIntern = async function (req, res) {
   try {
     let data = req.body;
-    if (Object.keys(data).length != 0) {
-      if (!data.name) {
-        return res
-          .status(400)
-          .send({ status: false, message: "candidate name is required" });
-      }
-      if (Object.keys(data.name).length == 0 || data.name.length == 0) {
-        return res
-          .status(400)
-          .send({ status: false, data: "Enter a valid name" });
-      }
-      if (!data.email) {
-        return res
-          .status(400)
-          .send({ status: false, message: "candidate email id is required" });
-      }
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
-        return res
-          .status(400)
-          .send({ status: false, data: "plz enter a valid Email" });
-      }
-      let isRegisteredEmail = await internModel.find({ email: data.email });
-      if (isRegisteredEmail.length != 0) {
-        return res
-          .status(400)
-          .send({ status: false, message: "email id already registered" });
-      }
-      if (!data.mobile) {
-        return res
-          .status(400)
-          .send({ status: false, message: "candidate mobile no is required" });
-      }
-      if (
-        !/^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/.test(
-          data.mobile
-        )
-      ) {
-        return res
-          .status(400)
-          .send({ status: false, data: "plz enter a valid Mobile no" });
-      }
-      let isRegisteredMobile = await internModel.find({ mobile: data.mobile });
-      if (isRegisteredMobile.length != 0) {
-        return res
-          .status(400)
-          .send({ status: false, msg: "mobile number already registered" });
-      }
-      if (!data.collegeName) {
-        return res
-          .status(400)
-          .send({ status: false, message: "collegeName is required" });
-      }
-      // if (
-      //   Object.keys(data.collegeId).length == 0 ||
-      //   data.collegeId.length == 0
-      // ) {
-      //   return res
-      //     .status(400)
-      //     .send({ status: false, data: "Enter a valid college id" });
-      // }
-      let iscollegeName = await collegeModel.findOne({name:data.collegeName});
-      if (!iscollegeName) {
-        return res.status(400).send({
-          status: false,
-          message: "your college is not registered with us ",
-        });
-      }
-      data.collegeId=iscollegeName._id
-      console.log(data)
-      delete data.collegeName;
-      console.log(data)
-      let interncreated = await internModel.create(data);
-      res.status(201).send({ status: true, data: interncreated });
-    } else {
+    if (Object.keys(data).length == 0) {
       return res
         .status(400)
-        .send({ status: false, message: "enter details for create an intern" });
+        .send({ status: false, message: "enter details to create an intern" });
     }
+    if (!data.name) {
+      return res
+        .status(400)
+        .send({ status: false, message: "candidate name is required" });
+    }
+    if (Object.keys(data.name).length == 0 || data.name.length == 0) {
+      return res
+        .status(400)
+        .send({ status: false, data: "Enter a valid name" });
+    }
+    if(!/^([a-zA-Z]+)$/.test(data.name)){
+      return res.status(400).send({status:false, massege:"plz enter valid name" })
+    }
+    if (!data.email) {
+      return res
+        .status(400)
+        .send({ status: false, message: "candidate email id is required" });
+    }
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
+      return res
+        .status(400)
+        .send({ status: false, data: "plz enter a valid Email" });
+    }
+    let isRegisteredEmail = await internModel.find({ email: data.email });
+    if (isRegisteredEmail.length != 0) {
+      return res
+        .status(400)
+        .send({ status: false, message: "email id already registered" });
+    }
+    if (!data.mobile) {
+      return res
+        .status(400)
+        .send({ status: false, message: "candidate mobile no is required" });
+    }
+    if (
+      !/^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/.test(
+        data.mobile
+      )
+    ) {
+      return res
+        .status(400)
+        .send({ status: false, data: "plz enter a valid Mobile no" });
+    }
+    let isRegisteredMobile = await internModel.find({ mobile: data.mobile });
+    if (isRegisteredMobile.length != 0) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "mobile number already registered" });
+    }
+
+    if (!data.collegeName) {
+      return res
+        .status(400)
+        .send({ status: false, message: "collegeName is required" });
+    }
+    if (
+      Object.keys(data.collegeName).length == 0 ||
+      data.collegeName.length == 0
+    ) {
+      return res
+        .status(400)
+        .send({ status: false, data: "Enter a valid college id" });
+    }
+    let collegeName = data.collegeName.toUpperCase();
+    let iscollegeName = await collegeModel.findOne({ name: collegeName });
+    if (!iscollegeName) {
+      return res.status(400).send({
+        status: false,
+        message: "your college is not registered with us ",
+      });
+    }
+    data.collegeId = iscollegeName._id;
+    //console.log(data);
+    delete data.collegeName;
+    //console.log(data);
+    let interncreated = await internModel.create(data);
+    res.status(201).send({ status: true, data: interncreated });
   } catch (err) {
     res.status(500).send({ status: false, message: err.message });
   }
