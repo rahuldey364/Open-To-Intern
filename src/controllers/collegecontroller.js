@@ -13,6 +13,10 @@ const createCollege = async function (req, res) {
             data: "College name is required for create a college doc",
           });
       }
+      let isValidName = await collegeModel.findOne({name:data.name})
+      if(isValidName){
+        return res.status(400).send({status:false,message:"Already one college registered with this same name"})
+      }
       if (!data.fullName) {
         return res
           .status(400)
@@ -21,9 +25,27 @@ const createCollege = async function (req, res) {
             data: "college fullname is required for creating a college doc ",
           });
       }
+      let isValidFullName = await collegeModel.findOne({fullName:data.fullName})
+      if(isValidFullName){
+        return res.status(400).send({status:false,message:"Already one college registered with this same fullname"})
+      }
+
+
+      /////======== logolink validation=======/////
+
+
       // if(!data.logolink){
       //     return res.status(400).send({status:false,data:"logolink is required for creating a college doc"})
       // }
+    
+      // if (!/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(data.email)) { 
+      //   return res
+      //     .status(400)
+      //     .send({ status: false, data: "plz enter a valid logolink" });
+      // }
+
+            /////======== logolink validation=======/////
+
       let collegeCreated = await collegeModel.create(data);
       res.status(200).send({ status: true, data: collegeCreated });
     } else {

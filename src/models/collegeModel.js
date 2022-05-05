@@ -17,8 +17,13 @@ const collegeSchema = new mongoose.Schema(
       type: String,
       required: [true, "logo is required"],
       trim: true,
+      validate:{
+        validator:function(v){
+          return /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(v);
+        }
+      },
       default:
-        "https://functionup.s3.ap-south-1.amazonaws.com/colleges/iith.png",
+        "https://functionup.s3.ap-south-1.amazonaws.com/colleges/iith.png"
     },
     isDeleted: {
       type: Boolean,

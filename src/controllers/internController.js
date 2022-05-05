@@ -11,12 +11,22 @@ const createIntern = async function (req, res) {
           .status(400)
           .send({ status: false, message: "candidate name is required" });
       }
+      if (Object.keys(data.name).length == 0 || data.name.length == 0) {
+        return res
+          .status(400)
+          .send({ status: false, data: "Enter a valid name" });
+      }
       if (!data.email) {
         return res
           .status(400)
           .send({ status: false, message: "candidate email id is required" });
       }
-      let isRegisteredEmail = await internModel.find({ email: data.email }); 
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
+        return res
+          .status(400)
+          .send({ status: false, data: "plz enter a valid Email" });
+      }
+      let isRegisteredEmail = await internModel.find({ email: data.email });
       if (isRegisteredEmail.length != 0) {
         return res
           .status(400)
@@ -26,6 +36,15 @@ const createIntern = async function (req, res) {
         return res
           .status(400)
           .send({ status: false, message: "candidate mobile no is required" });
+      }
+      if (
+        !/^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/.test(
+          data.mobile
+        )
+      ) {
+        return res
+          .status(400)
+          .send({ status: false, data: "plz enter a valid Mobile no" });
       }
       let isRegisteredMobile = await internModel.find({ mobile: data.mobile });
       if (isRegisteredMobile.length != 0) {
@@ -38,11 +57,19 @@ const createIntern = async function (req, res) {
           .status(400)
           .send({ status: false, message: "collegeId is required" });
       }
+      if (
+        Object.keys(data.collegeId).length == 0 ||
+        data.collegeId.length == 0
+      ) {
+        return res
+          .status(400)
+          .send({ status: false, data: "Enter a valid college id" });
+      }
       let validationcollegeId = await collegeModel.findById(data.collegeId);
       if (!validationcollegeId) {
         return res.status(400).send({
           status: false,
-          message: "enter valid collegeId or a new college",
+          message: "your college is not registered with us ",
         });
       }
       let interncreated = await internModel.create(data);
@@ -77,7 +104,13 @@ const getCollegeDetails = async function (req, res) {
     }
     const getIntern = await internModel
       .find({ collegeId: isValidCollege._id, isDeleted: false })
-      .select({ name: 1, mobile: 1, email: 1,_id:0 });
+      .select({ name: 1, mobile: 1, email: 1, _id: 0 });
+    if (getIntern.length == 0) {
+      return res.status(404).send({
+        status: false,
+        message: "no intern found with your provided college details",
+      });
+    }
     const getAllIntern = {
       name: isValidCollege.name,
       fullName: isValidCollege.fullName,
