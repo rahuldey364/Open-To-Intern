@@ -93,13 +93,14 @@ const createIntern = async function (req, res) {
 
 const getCollegeDetails = async function (req, res) {
   try {
-    const collegeName = req.query.collegeName.toUpperCase();
-    if (!collegeName) {
+    let clgName = req.query.collegeName
+    if (!clgName) {
       return res.status(400).send({
         status: false,
         message: "enter a college name first",
       });
     }
+    let collegeName=req.query.collegeName.toUpperCase()
     const isValidCollege = await collegeModel.findOne({ name: collegeName }); //{ _Id}
     if (!isValidCollege) {
       return res.status(400).send({
