@@ -36,11 +36,11 @@ const createCollege = async function (req, res) {
         message: "college fullname is required for creating a college doc ",
       });
     }
-    if (!/^[a-zA-Z ]*$/.test(data.fullName)) {
-      return res
-        .status(400)
-        .send({ status: false, massege: "plz enter valid full name ,dont use number and special characters for college fullname" });
-    }
+    // if (!/^[a-zA-Z ]*$/.test(data.fullName)) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, massege: "plz enter valid full name ,dont use number and special characters for college fullname" });
+    // }
     let isValidFullName = await collegeModel.findOne({
       fullName: data.fullName,
     });
@@ -55,7 +55,7 @@ const createCollege = async function (req, res) {
 
     /////======== logolink validation=======/////
 
-    if (!data.logolink) {
+    if (!data.logoLink) {
       return res
         .status(400)
         .send({
@@ -66,7 +66,7 @@ const createCollege = async function (req, res) {
 
     if (
       !/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(
-        data.logolink
+        data.logoLink
       )
     ) {
       return res
