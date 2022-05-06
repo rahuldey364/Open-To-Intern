@@ -7,13 +7,13 @@ const createCollege = async function (req, res) {
     if (Object.keys(data).length == 0) {
       return res.status(400).send({
         status: false,
-        data: "plz enter details for create college",
+        message: "plz enter details for create college",
       });
     }
     if (!data.name) {
       return res.status(400).send({
         status: false,
-        data: "College name is required for create a college doc",
+        message: "College name is required for create a college doc",
       });
     }
     if (!/^([a-zA-Z]+)$/.test(data.name)) {
@@ -33,7 +33,7 @@ const createCollege = async function (req, res) {
     if (!data.fullName) {
       return res.status(400).send({
         status: false,
-        data: "college fullname is required for creating a college doc ",
+        message: "college fullname is required for creating a college doc ",
       });
     }
     let isValidFullName = await collegeModel.findOne({
@@ -55,7 +55,7 @@ const createCollege = async function (req, res) {
         .status(400)
         .send({
           status: false,
-          data: "logolink is required for creating a college doc",
+          message: "logolink is required for creating a college doc",
         });
     }
 
@@ -66,11 +66,11 @@ const createCollege = async function (req, res) {
     ) {
       return res
         .status(400)
-        .send({ status: false, data: "plz enter a valid logolink" });
+        .send({ status: false, message: "plz enter a valid logolink" });
     }
 
     let collegeCreated = await collegeModel.create(data);
-    res.status(200).send({ status: true, data: collegeCreated });
+    res.status(201).send({ status: true, data: collegeCreated });
   } catch (err) {
     res.status(500).send({ status: false, err: err.message });
   }

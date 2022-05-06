@@ -18,10 +18,7 @@ const createIntern = async function (req, res) {
     if (Object.keys(data.name).length == 0 || data.name.length == 0) {
       return res
         .status(400)
-        .send({ status: false, data: "Enter a valid name" });
-    }
-    if(!/^([a-zA-Z]+)$/.test(data.name)){
-      return res.status(400).send({status:false, massege:"plz enter valid name" })
+        .send({ status: false, message: "Enter a valid name" });
     }
     if (!data.email) {
       return res
@@ -51,13 +48,13 @@ const createIntern = async function (req, res) {
     ) {
       return res
         .status(400)
-        .send({ status: false, data: "plz enter a valid Mobile no" });
+        .send({ status: false, message: "plz enter a valid Mobile no" });
     }
     let isRegisteredMobile = await internModel.find({ mobile: data.mobile });
     if (isRegisteredMobile.length != 0) {
       return res
         .status(400)
-        .send({ status: false, msg: "mobile number already registered" });
+        .send({ status: false, message: "mobile number already registered" });
     }
 
     if (!data.collegeName) {
@@ -71,7 +68,7 @@ const createIntern = async function (req, res) {
     ) {
       return res
         .status(400)
-        .send({ status: false, data: "Enter a valid college id" });
+        .send({ status: false, message: "Enter a valid college id" });
     }
     let collegeName = data.collegeName.toUpperCase();
     let iscollegeName = await collegeModel.findOne({ name: collegeName });
