@@ -115,7 +115,7 @@ const getCollegeDetails = async function (req, res) {
     }
     const getIntern = await internModel
       .find({ collegeId: isValidCollege._id, isDeleted: false })
-      .select({ name: 1, mobile: 1, email: 1, _id: 0 });
+      .select({ name: 1, mobile: 1, email: 1 });
     if (getIntern.length == 0) {
       return res.status(404).send({
         status: false,
