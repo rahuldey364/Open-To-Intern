@@ -3,7 +3,7 @@ const collegeModel = require("../models/collegeModel");
 //===============POST/College====================
 const createCollege = async function (req, res) {
   try {
-    data = req.body;
+     let data = req.body;
     if (Object.keys(data).length == 0) {
       return res.status(400).send({
         status: false,
