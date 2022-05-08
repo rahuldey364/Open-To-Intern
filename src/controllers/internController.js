@@ -126,7 +126,7 @@ const getCollegeDetails = async function (req, res) {
       name: isValidCollege.name,
       fullName: isValidCollege.fullName,
       logoLink: isValidCollege.logoLink,
-      interests: getIntern,
+      interests: getIntern
     };
     res.status(200).send({ status: true, data: getAllIntern });
   } catch (err) {
